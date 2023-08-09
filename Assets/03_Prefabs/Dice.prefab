@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 2308565029021527733}
   - component: {fileID: 1157204410998355240}
   m_Layer: 0
-  m_Name: Diece_White
+  m_Name: Dice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

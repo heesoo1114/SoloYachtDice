@@ -1,4 +1,4 @@
-using UnityEditor.Purchasing;
+using System.Collections;
 using UnityEngine;
 
 public class DiceContoller : MonoBehaviour
@@ -6,15 +6,16 @@ public class DiceContoller : MonoBehaviour
     private Rigidbody _rigidBody;
     private TriggerController _triggerController;
 
+    private Vector3 initPos;
+
     private int diceNum = 0;
     public int DiceNum => diceNum;
 
     [Header("Value")]
     [SerializeField] private bool isNeedCheck = false; // 주사위 눈 확인했는지 안 했는지
     [SerializeField] private bool isGround = false;    // 땅인지 아닌지
-    [SerializeField] private float speed = 10;
-
-    private Vector3 initPos;
+    [SerializeField] private float jumpPower = 10;
+    [SerializeField] private float animSpeed = 1;
 
     private void Awake()
     {
@@ -25,7 +26,6 @@ public class DiceContoller : MonoBehaviour
     private void Start()
     {
         initPos = transform.localPosition;
-        _rigidBody.AddTorque(Random.Range(-360, 360), Random.Range(-360, 360), Random.Range(-360, 360));
     }
 
     private void Update()
@@ -49,23 +49,45 @@ public class DiceContoller : MonoBehaviour
 
     public void RollCube()
     {
-        if (isGround)
-        {
-            diceNum = 0;
-            isGround = false;
-            isNeedCheck = true;
+        diceNum = 0;
+        isGround = false;
+        isNeedCheck = true;
 
-            _rigidBody.AddTorque(Random.Range(-360, 360), Random.Range(-360, 360), Random.Range(-360, 360));
-            _rigidBody.velocity = Vector3.up * speed;
-        }
+        _rigidBody.AddTorque(Random.Range(-360, 360), Random.Range(-360, 360), Random.Range(-360, 360));
+        _rigidBody.velocity = Vector3.up * jumpPower;
     }
 
     public void Reset()
     {
         isNeedCheck = false;
-        isGround = false;
+        isGround = true;
         diceNum = 0;
-        transform.localPosition = initPos;
+
+        Vector3 nowAngle = new Vector3(transform.localEulerAngles.x, 0, transform.localEulerAngles.z);
+        transform.localEulerAngles = nowAngle;
+
+        StartCoroutine(ResetMoveRotAnim(initPos));
+    }
+
+    private IEnumerator ResetMoveRotAnim(Vector3 targetPos)
+    {
+        float moveTime = 0;
+
+        while (true)
+        {
+            moveTime += Time.deltaTime;
+            float value = moveTime / animSpeed;
+
+            transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, value);
+
+            if (value >= 1f)
+            {
+                transform.localPosition = targetPos;
+                yield break;
+            }
+
+            yield return null;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
