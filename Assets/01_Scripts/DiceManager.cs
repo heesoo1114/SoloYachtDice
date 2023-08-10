@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DiceManager : MonoBehaviour
@@ -41,9 +42,37 @@ public class DiceManager : MonoBehaviour
     {
         if (!AllDiceReady()) return;
 
-        for (int i = 0; i < _diceController.Length; i++)
+        foreach (DiceContoller _controller in _diceController)
         {
-            _diceController[i].RollCube();
+            _controller.RollCube();
+        }
+
+        StartCoroutine(LaterRollCheck());
+    }
+
+    private IEnumerator LaterRollCheck()
+    {
+        yield return new WaitForSeconds(2f);
+
+        while (true)
+        {
+            if (AllDiceReady())
+            {
+                if (!IsCorrectRoll())
+                {
+                    Debug.Log("is not correct");
+                    AllDiceReset();
+                    yield return new WaitForSeconds(_diceController[0].AnimSpeed);
+                    AllDiceRoll();
+                }
+                else
+                {
+                    Debug.Log("is correct");
+                }
+
+                yield break;
+            }
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -53,7 +82,7 @@ public class DiceManager : MonoBehaviour
 
         foreach (DiceContoller _controller in _diceController)
         {
-            _controller.Reset();
+            _controller.ResetCube();
         }
     }
 

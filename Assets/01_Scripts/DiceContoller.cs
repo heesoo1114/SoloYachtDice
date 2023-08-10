@@ -11,11 +11,13 @@ public class DiceContoller : MonoBehaviour
     private int diceNum = 0;
     public int DiceNum => diceNum;
 
+    private bool isNeedCheck = false; // 주사위 눈 확인했는지 안 했는지
+    private bool isGround = false;    // 땅인지 아닌지
+
     [Header("Value")]
-    [SerializeField] private bool isNeedCheck = false; // 주사위 눈 확인했는지 안 했는지
-    [SerializeField] private bool isGround = false;    // 땅인지 아닌지
     [SerializeField] private float jumpPower = 10;
     [SerializeField] private float animSpeed = 1;
+    public float AnimSpeed => animSpeed;
 
     private void Awake()
     {
@@ -30,14 +32,15 @@ public class DiceContoller : MonoBehaviour
 
     private void Update()
     {
-        if (_rigidBody.IsSleeping() && isGround & isNeedCheck)
+        if (_rigidBody.IsSleeping() && isGround && isNeedCheck)
         {
             _triggerController.ActTrigger();
             isNeedCheck = false;
         }
     }
 
-    public void SetDiceNum(int numValue)
+    // DiceNumTrigger의 GetDiceNumEvent에 연결되어 있음
+    public void SetDiceNum(int numValue) 
     {
         diceNum = numValue;
     }
@@ -57,30 +60,38 @@ public class DiceContoller : MonoBehaviour
         _rigidBody.velocity = Vector3.up * jumpPower;
     }
 
-    public void Reset()
+    public void ResetCube()
     {
         isNeedCheck = false;
         isGround = true;
         diceNum = 0;
 
-        Vector3 nowAngle = new Vector3(transform.localEulerAngles.x, 0, transform.localEulerAngles.z);
-        transform.localEulerAngles = nowAngle;
+        // // 현재 로컬 회전 값을 가져옴
+        // Vector3 originalRotation = transform.localEulerAngles;
+        // 
+        // // y축 회전 값만 남기고 다른 축은 초기화
+        // Vector3 newRotationEuler = new Vector3(originalRotation.x, 0, originalRotation.z);
+        // 
+        // // 새로운 Quaternion을 생성하여 회전을 조작
+        // Quaternion newRotationQuaternion = Quaternion.Euler(newRotationEuler);
+        // transform.localRotation = newRotationQuaternion;
 
-        StartCoroutine(ResetMoveRotAnim(initPos));
+        StartCoroutine(MoveAnim(initPos));
     }
 
-    private IEnumerator ResetMoveRotAnim(Vector3 targetPos)
+    private IEnumerator MoveAnim(Vector3 targetPos)
     {
         float moveTime = 0;
+        float value = 0;
 
         while (true)
         {
             moveTime += Time.deltaTime;
-            float value = moveTime / animSpeed;
+            value = moveTime / animSpeed;
 
             transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, value);
 
-            if (value >= 1f)
+            if (value >= 0.8f)
             {
                 transform.localPosition = targetPos;
                 yield break;

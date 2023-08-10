@@ -310,6 +310,7 @@ GameObject:
   - component: {fileID: -1220279972703139750}
   - component: {fileID: 2308565029021527733}
   - component: {fileID: 1157204410998355240}
+  - component: {fileID: 7284038814422286337}
   m_Layer: 0
   m_Name: Dice
   m_TagString: Untagged
@@ -331,7 +332,7 @@ Transform:
   m_Children:
   - {fileID: 6370501791005998150}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7098075400793510478
 MeshFilter:
@@ -446,7 +447,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isNeedCheck: 0
   isGround: 0
-  speed: 5
+  jumpPower: 5
+  animSpeed: 0.6
+--- !u!114 &7284038814422286337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801955793903224657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 0.084905684, g: 0.0796992, b: 0.0796992, a: 1}
+  outlineWidth: 3.5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &7561046531717196829
 GameObject:
   m_ObjectHideFlags: 0
