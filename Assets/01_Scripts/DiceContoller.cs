@@ -5,29 +5,40 @@ public class DiceContoller : MonoBehaviour
 {
     private Rigidbody _rigidBody;
     private TriggerController _triggerController;
+    private DiceAnimation _diceAnim;
+    private Outline _outLine;
 
     private Vector3 initPos;
+    private float initScale;
 
     private int diceNum = 0;
     public int DiceNum => diceNum;
 
-    private bool isNeedCheck = false; // 주사위 눈 확인했는지 안 했는지
-    private bool isGround = false;    // 땅인지 아닌지
-
     [Header("Value")]
     [SerializeField] private float jumpPower = 10;
-    [SerializeField] private float animSpeed = 1;
-    public float AnimSpeed => animSpeed;
+    [SerializeField] private bool isNeedCheck = false; // 주사위 눈 확인했는지 안 했는지
+    [SerializeField] private bool isGround = false;    // 땅인지 아닌지
+    [SerializeField] private bool isKeep = false;      // 킵한 주사위인지 아닌지
+
+    [Header("Anim")]
+    [SerializeField] private float moveAnimSpeed = 1;
+    [SerializeField] private float selectAnimSpeed = 1;
+    [SerializeField] private float selectAnimTargetScale = 1.2f;
+    public float MoveAnimSpeed => moveAnimSpeed;
+    public float SelectAnimSpeed => selectAnimSpeed;
 
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody>();
+        _outLine = GetComponent<Outline>();
+        _diceAnim = GetComponent<DiceAnimation>();
         _triggerController = transform.GetChild(0).GetComponent<TriggerController>();
     }
 
     private void Start()
     {
         initPos = transform.localPosition;
+        initScale = transform.localScale.x;
     }
 
     private void Update()
@@ -39,19 +50,34 @@ public class DiceContoller : MonoBehaviour
         }
     }
 
+    #region 접근
+
     // DiceNumTrigger의 GetDiceNumEvent에 연결되어 있음
     public void SetDiceNum(int numValue) 
     {
         diceNum = numValue;
     }
 
+    public void SetDiceKeepOrOut()
+    {
+        isKeep = (isKeep) ? false : true;
+        _outLine.enabled = isKeep;
+        _rigidBody.isKinematic = isKeep;
+    }
+
     public bool IsReady()
     {
-        return isGround & !isNeedCheck;
+        return isGround && !isNeedCheck;
     }
+
+    #endregion
+
+    #region Controll 함수
 
     public void RollCube()
     {
+        if (isKeep) return;
+
         diceNum = 0;
         isGround = false;
         isNeedCheck = true;
@@ -62,44 +88,33 @@ public class DiceContoller : MonoBehaviour
 
     public void ResetCube()
     {
+        if (isKeep) return;
+
         isNeedCheck = false;
         isGround = true;
-        diceNum = 0;
 
-        // // 현재 로컬 회전 값을 가져옴
-        // Vector3 originalRotation = transform.localEulerAngles;
-        // 
-        // // y축 회전 값만 남기고 다른 축은 초기화
-        // Vector3 newRotationEuler = new Vector3(originalRotation.x, 0, originalRotation.z);
-        // 
-        // // 새로운 Quaternion을 생성하여 회전을 조작
-        // Quaternion newRotationQuaternion = Quaternion.Euler(newRotationEuler);
-        // transform.localRotation = newRotationQuaternion;
+        // rotation 부분 -> 추후 수정 필요
+        Vector3 nowAngle = new Vector3(transform.localEulerAngles.x, 0, transform.localEulerAngles.z);
+        transform.localEulerAngles = nowAngle;
 
-        StartCoroutine(MoveAnim(initPos));
+        _diceAnim.MoveAnimPlay(initPos, moveAnimSpeed);
     }
 
-    private IEnumerator MoveAnim(Vector3 targetPos)
+    #endregion
+
+    #region 선택 애니메이션
+
+    public void SelectScaleAnimPlay()
     {
-        float moveTime = 0;
-        float value = 0;
-
-        while (true)
-        {
-            moveTime += Time.deltaTime;
-            value = moveTime / animSpeed;
-
-            transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, value);
-
-            if (value >= 0.8f)
-            {
-                transform.localPosition = targetPos;
-                yield break;
-            }
-
-            yield return null;
-        }
+        _diceAnim.ScaleAnimPlay(selectAnimTargetScale, selectAnimSpeed);
     }
+
+    public void SelectScaleAnimStop()
+    {
+        _diceAnim.ScaleAnimPlay(initScale, selectAnimSpeed);
+    }
+
+    #endregion
 
     private void OnCollisionEnter(Collision collision)
     {

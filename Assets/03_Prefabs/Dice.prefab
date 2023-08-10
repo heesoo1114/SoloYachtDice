@@ -309,8 +309,9 @@ GameObject:
   - component: {fileID: 5000573049203631748}
   - component: {fileID: -1220279972703139750}
   - component: {fileID: 2308565029021527733}
-  - component: {fileID: 1157204410998355240}
   - component: {fileID: 7284038814422286337}
+  - component: {fileID: 7201039023463627576}
+  - component: {fileID: 1157204410998355240}
   m_Layer: 0
   m_Name: Dice
   m_TagString: Untagged
@@ -332,7 +333,7 @@ Transform:
   m_Children:
   - {fileID: 6370501791005998150}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7098075400793510478
 MeshFilter:
@@ -433,6 +434,36 @@ Rigidbody:
   m_Interpolate: 2
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &7284038814422286337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801955793903224657}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 0.084905684, g: 0.0796992, b: 0.0796992, a: 1}
+  outlineWidth: 4
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &7201039023463627576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801955793903224657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89530c001797c894e89e4dffe5cfc7ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1157204410998355240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,28 +476,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45cc70a9b5964be4a9fa0f7107f0b563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpPower: 5
   isNeedCheck: 0
   isGround: 0
-  jumpPower: 5
-  animSpeed: 0.6
---- !u!114 &7284038814422286337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6801955793903224657}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0.084905684, g: 0.0796992, b: 0.0796992, a: 1}
-  outlineWidth: 3.5
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+  isKeep: 0
+  moveAnimSpeed: 1
+  selectAnimSpeed: 1
+  selectAnimTargetScale: 1.2
 --- !u!1 &7561046531717196829
 GameObject:
   m_ObjectHideFlags: 0
