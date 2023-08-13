@@ -11,8 +11,8 @@ public class ScoreCountSystem : MonoBehaviour
     private int[] numCntList = new int[6];
 
     private int[] arr = new int[6]; // temp ¿ªÇÒ
-
     private int sum = 0;
+
     private int bonusScore = 35;
     private int ssFixedScore = 15;
     private int lsFixedScore = 30;
