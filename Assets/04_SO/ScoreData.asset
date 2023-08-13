@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388914a00b74d6e41add4ed2628ec0a8, type: 3}
+  m_Name: ScoreData
+  m_EditorClassIdentifier: 
+  cntScoreList: 020000000000000003000000000000000a00000000000000
+  subtotal: 15
+  choice: 15
+  fourOfKind: 0
+  fullHouse: 0
+  yacht: 0
+  smallStraight: 0
+  largeStraight: 0

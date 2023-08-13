@@ -1,17 +1,24 @@
 using System.Collections;
 using UnityEngine;
+using System;
 
 public class DiceManager : MonoBehaviour
 {
     private DiceContoller[] _diceController = new DiceContoller[5];
     private DiceContoller _selectController = null;
 
-    private bool isRollDone;
+    private int[] diceInfo = new int[5];
+    public int[] DiceInfo => diceInfo;
 
+    private bool isRollDone;
+     
+    // Select
     private bool isSelecting;
     private bool isChanging;
     private int selectedIndex = 0;
     private int initIndex = 0;
+
+    public Action rollDoneEvent;
 
     private void Awake()
     {
@@ -170,7 +177,11 @@ public class DiceManager : MonoBehaviour
     private void RollDone()
     {
         isRollDone = true;
+
         StartSelectDice();
+        SetDiceNumInfo();
+
+        rollDoneEvent?.Invoke();
     }
     
     public void AllDiceReset()
@@ -180,6 +191,14 @@ public class DiceManager : MonoBehaviour
         foreach (DiceContoller _controller in _diceController)
         {
             _controller.ResetCube();
+        }
+    }
+
+    private void SetDiceNumInfo()
+    {
+        for (int i = 0; i < _diceController.Length; i++)
+        {
+            diceInfo[i] = _diceController[i].DiceNum;
         }
     }
 
