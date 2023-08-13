@@ -65,6 +65,8 @@ public class DiceContoller : MonoBehaviour
         _rigidBody.isKinematic = isKeep;
     }
 
+    public bool IsKeep() => isKeep;
+
     public bool IsReady()
     {
         return isGround && !isNeedCheck;

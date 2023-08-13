@@ -1,14 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class ScoreCountSystem : MonoBehaviour
 {
     [SerializeField] private DiceManager _diceManager;
-    [SerializeField] private ScoreDataSO scoreData;
+    [SerializeField] private FakeScoreDataSO fakeScoreData;
 
-    private List<int> numList = new List<int>();
-    private List<int> numCntList = new List<int>();
+    private int[] numList = new int[5];
+    private int[] numCntList = new int[6];
+
+    private int[] arr = new int[6]; // temp 역할
 
     private int sum = 0;
     private int bonusScore = 35;
@@ -16,10 +18,22 @@ public class ScoreCountSystem : MonoBehaviour
     private int lsFixedScore = 30;
     private int yachtFixedScore = 50;
 
+    private bool isCounted = false; // 점수 세는 중인지 아닌지
+
     private void Start()
     {
         _diceManager.rollDoneEvent += SetAndCount;
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            fakeScoreData.ResetProperty();
+        }
+    }
+
+    #region Flow
 
     private void SetAndCount()
     {
@@ -28,97 +42,103 @@ public class ScoreCountSystem : MonoBehaviour
 
     private IEnumerator Col_SetAndCount()
     {
-        scoreData.subtotal = 0;
-        scoreData.choice = 0;
-        scoreData.fourOfKind = 0;
-        scoreData.fullHouse = 0;
+        isCounted = true;
         yield return SetNumInfo();
-        ScoreAllTypeCount();
+        yield return ScoreAllTypeCount();
+        yield return ResetScoreInfO();
+        isCounted = false;
     }
 
     // 현재 주사위 숫자 정보 세팅
     private IEnumerator SetNumInfo()
     {
-        numList.Clear();
-        numCntList.Clear();
-
-        // List와 배열들 정보 세팅
+        // 1. List와 배열들 정보 세팅
+        // 2. 주사위 눈이 각각 몇 개가 있는지 체크 (SetNumInfo에서 실행)
+        // 3. 주사위 눈 합
+        int n = 0;
         for (int i = 0; i < _diceManager.DiceInfo.Length; i++)
         {
-            numList.Add(_diceManager.DiceInfo[i]);
-            numCntList.Add(0);
-        }
+            n = _diceManager.DiceInfo[i];
 
-        // 주사위 눈이 각각 몇 개가 있는지 체크 (SetNumInfo에서 실행)
-        // 주사위 눈 합
-        int n = 0;
-        for (int i = 0; i < numList.Count; i++)
-        {
-            n = numList[i];
-            // Debug.Log(n - 1);
-            numCntList[n - 1]++; 
+            numList[i] = n;
+            numCntList[n - 1]++;
             sum += n;
         }
 
-        yield return null;
+        yield return new WaitForEndOfFrame();
     }
+
+    private IEnumerator ResetScoreInfO()
+    {
+        sum = 0;
+        Array.Clear(numList, 0, numList.Length);
+        Array.Clear(numCntList, 0, numCntList.Length);
+
+        yield return new WaitForEndOfFrame();
+    }
+
+    #endregion
 
     #region CountScore
 
-    private void ResetScoreInfO()
-    {
-        // not yet
-    }
-
-    private void ScoreAllTypeCount()
+    private IEnumerator ScoreAllTypeCount()
     {
         PersonalScoreTypeCount();
         SameScoreTypeCount();
         RowTypeScoreCount();
+        yield return new WaitForEndOfFrame();
     }
 
     private void PersonalScoreTypeCount()
     {
         int num = 0;
-        for (int i = 0; i < numCntList.Count; i++)
+        for (int i = 0; i < numCntList.Length; i++)
         {
             num = numCntList[i];
-            scoreData.cntScoreList[i] = num * (i + 1);
+            fakeScoreData.cntScoreList[i] = num * (i + 1);
         }
 
-        // subtotal 부분 수정 필요
-        for (int i = 0; i < scoreData.cntScoreList.Length; i++)
-        {
-            scoreData.subtotal += scoreData.cntScoreList[i];
-        }
+        // subtotal 부분 수정 필요 (활성화 되어 있는 애들만 + 해주기)
+        // for (int i = 0; i < fakeScoreData.cntScoreList.Length; i++)
+        // {
+        //     fakeScoreData.subtotal += fakeScoreData.cntScoreList[i];
+        // }
     }
 
     private void SameScoreTypeCount()
     {
-        scoreData.choice = sum;
+        fakeScoreData.choice = sum;
 
-        int max = 0;
-        int min = 5;
-        foreach (int num in numCntList)
+        for (int i = 0; i < arr.Length; i++)
         {
-            if (num >= max) max = num;
-            if (num <= min) min = num;            
+            arr[i] = numCntList[i];
         }
+        
+        Array.Sort(arr);
+
+        int max = arr[arr.Length - 1];
+        int min = arr[arr.Length - 2];
+
+        // Debug.Log("max : " + max);
+        // Debug.Log("min : " + min);
 
         if (max >= 4)
         {
-            scoreData.fourOfKind = sum;
+            fakeScoreData.fourOfKind = sum;
+            Debug.Log("fourofkind");
 
             if (max == 5)
             {
-                scoreData.yacht = yachtFixedScore;
+                Debug.Log("yacht");
+                fakeScoreData.yacht = yachtFixedScore;
             }
         }
-        else
+        else if (max == 3)
         {
             if (min == 2)
             {
-                scoreData.fullHouse = sum;
+                Debug.Log("fullhouse");
+                fakeScoreData.fullHouse = sum;
             }
         }
     }
@@ -126,26 +146,29 @@ public class ScoreCountSystem : MonoBehaviour
     private void RowTypeScoreCount()
     {
         int cnt = 0;
-        int temp = numCntList[0];
-
-        for (int i = 0; i < numCntList.Count; i++)
+        for (int i = 0; i < numCntList.Length; i++)
         {
-            if (numCntList[i] == temp)
+            if (i == numCntList.Length - 1)
             {
-                temp = numCntList[i];
-                cnt++;
+                if (numCntList[i] != 0) cnt++;
+                break;
             }
+
+            if (numCntList[i] == 0) cnt = 0;
+            else cnt++;
         }
 
-        Debug.Log(cnt);
+        // Debug.Log("cnt : " + cnt);
 
         if (cnt >= 4)
         {
-            scoreData.smallStraight = ssFixedScore;
+            Debug.Log("smallStraight");
+            fakeScoreData.smallStraight = ssFixedScore;
 
             if (cnt == 5)
             {
-                scoreData.largeStraight = lsFixedScore;
+                Debug.Log("largeStraight");
+                fakeScoreData.largeStraight = lsFixedScore;
             }
         }
     }

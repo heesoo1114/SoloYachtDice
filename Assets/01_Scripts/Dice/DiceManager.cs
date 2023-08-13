@@ -114,11 +114,24 @@ public class DiceManager : MonoBehaviour
     }
 
     // 주사위 중 하나라도 이상한 상태인 경우
-    public bool IsCorrectRoll() 
+    public bool IsCorrectRoll()
     {
         foreach (DiceContoller _controller in _diceController)
         {
             if (_controller.DiceNum == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 모든 다이스를 킵하였는지
+    public bool AllDiceKeep()
+    {
+        foreach (DiceContoller _controller in _diceController)
+        {
+            if (!_controller.IsKeep())
             {
                 return false;
             }
@@ -133,6 +146,7 @@ public class DiceManager : MonoBehaviour
     public void AllDiceRoll()
     {
         if (!AllDiceReady()) return;
+        if (AllDiceKeep()) return;
 
         EndSelectDice();
 
@@ -182,6 +196,8 @@ public class DiceManager : MonoBehaviour
         SetDiceNumInfo();
 
         rollDoneEvent?.Invoke();
+
+        Array.Clear(diceInfo, 0, diceInfo.Length);
     }
     
     public void AllDiceReset()

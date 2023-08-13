@@ -960,7 +960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _diceManager: {fileID: 919120744}
-  scoreData: {fileID: 11400000, guid: ba94ad26f5efa3945baa414158bf388c, type: 2}
+  fakeScoreData: {fileID: 11400000, guid: 4ce294aa2c85508448b2e7fe537dc830, type: 2}
 --- !u!4 &1754267071 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6138043921473953259, guid: 0d2b9188252a78b4298fb8e34d9229ee, type: 3}
