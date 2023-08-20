@@ -1,11 +1,13 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using System.Collections;
 using UnityEngine;
+using System;
 
 public class ScoreBoardController : MonoBehaviour
 {
+    private FakeScoreDataSO fakeScoreData;
+    private RealScoreDataSO realScoreData;
+
     [SerializeField] private List<ScoreText> scoreKindList;
 
     private bool isScoreBoardOn = false;
@@ -22,11 +24,15 @@ public class ScoreBoardController : MonoBehaviour
     [SerializeField] private float scaleAnimSpeed = 1f;
     private float startFontSize;
 
+    private void Awake()
+    {
+        fakeScoreData = Resources.Load<FakeScoreDataSO>("FakeScoreData");
+        realScoreData = Resources.Load<RealScoreDataSO>("RealScoreData");
+    }
+
     private void Start()
     {
-        startFontSize = scoreKindList[0].Text.fontSize;
-
-        StartSelectScoreKind();
+        startFontSize = scoreKindList[0].TextMeshPro.fontSize;
     }
 
     private void Update()
@@ -49,12 +55,11 @@ public class ScoreBoardController : MonoBehaviour
                 ChangeScoreKind(-inputV);
             }
 
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.L))
             {
                 if (_selectScoreKind != null)
                 {
-                    // 점수 넣어주고 다음 턴으로 넘어가는 함수 생성 
-
+                    SetRealScore();
                     EndSelectScorekind();
                     Debug.Log("점수 넣어주기");
                 }
@@ -64,12 +69,31 @@ public class ScoreBoardController : MonoBehaviour
 
     #region Select
 
+    [ContextMenu("On")]
     public void StartSelectScoreKind()
     {
         isScoreBoardOn = true;
+        
+        // 여기서 넣을 수 있는 점수들 넣어서 텍스트로 보여주기
+        foreach (var scoreKind in scoreKindList)
+        {
+            string name = scoreKind.gameObject.name;
+            int temp = fakeScoreData.GetIWantProperty(name);
+
+            scoreKind.TextMeshPro.text = temp.ToString();
+            
+            // Debug.Log($"{name} + {temp}");
+        }
 
         _selectScoreKind = scoreKindList[initIndex];
         ChangeScoreKind();
+    }
+
+    public void SetRealScore()
+    {
+        string name = _selectScoreKind.gameObject.name;
+        int temp = fakeScoreData.GetIWantProperty(name);
+        realScoreData.SetIWantProperty(name, temp);
     }
 
     // 주사위 돌릴 준비 마쳤을 때 실행

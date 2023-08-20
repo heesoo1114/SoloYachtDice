@@ -4,7 +4,11 @@ using TMPro;
 public class ScoreText : MonoBehaviour
 {
     private TextMeshProUGUI _text;
-    public TextMeshProUGUI Text => _text;
+    public TextMeshProUGUI TextMeshPro
+    {
+        get { return _text; }
+        set { _text = value; }
+    }
     private TextAnimation _textAnimation;
 
     public int scoreKindId;

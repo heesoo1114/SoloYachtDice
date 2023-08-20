@@ -3602,8 +3602,8 @@ MonoBehaviour:
   - {fileID: 1033604577}
   - {fileID: 1253838085}
   - {fileID: 415094900}
-  EndFontSize: 50
-  scaleAnimSpeed: 0.4
+  EndFontSize: 45
+  scaleAnimSpeed: 0.3
 --- !u!1 &1057142593
 GameObject:
   m_ObjectHideFlags: 0

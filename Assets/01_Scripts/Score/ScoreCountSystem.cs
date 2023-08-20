@@ -91,23 +91,23 @@ public class ScoreCountSystem : MonoBehaviour
 
     private void PersonalScoreTypeCount()
     {
-        int num = 0;
-        for (int i = 0; i < numCntList.Length; i++)
-        {
-            num = numCntList[i];
-            fakeScoreData.cntScoreList[i] = num * (i + 1);
-        }
-
-        // subtotal 부분 수정 필요 (활성화 되어 있는 애들만 + 해주기)
-        // for (int i = 0; i < fakeScoreData.cntScoreList.Length; i++)
+        // for (int i = 0; i < numCntList.Length; i++)
         // {
-        //     fakeScoreData.subtotal += fakeScoreData.cntScoreList[i];
+        //     num = numCntList[i];
+        //     fakeScoreData.cntScoreList[i] = num * (i + 1);
         // }
+
+        fakeScoreData.Aces   = numCntList[0] * 1;
+        fakeScoreData.Deuces = numCntList[1] * 2;
+        fakeScoreData.Threes = numCntList[2] * 3;
+        fakeScoreData.Fours  = numCntList[3] * 4;
+        fakeScoreData.Fives  = numCntList[4] * 5;
+        fakeScoreData.Sixes  = numCntList[5] * 6;
     }
 
     private void SameScoreTypeCount()
     {
-        fakeScoreData.choice = sum;
+        fakeScoreData.Choice = sum;
 
         for (int i = 0; i < arr.Length; i++)
         {
@@ -124,13 +124,13 @@ public class ScoreCountSystem : MonoBehaviour
 
         if (max >= 4)
         {
-            fakeScoreData.fourOfKind = sum;
+            fakeScoreData.FourOfKind = sum;
             Debug.Log("fourofkind");
 
             if (max == 5)
             {
                 Debug.Log("yacht");
-                fakeScoreData.yacht = yachtFixedScore;
+                fakeScoreData.Yacht = yachtFixedScore;
             }
         }
         else if (max == 3)
@@ -138,7 +138,7 @@ public class ScoreCountSystem : MonoBehaviour
             if (min == 2)
             {
                 Debug.Log("fullhouse");
-                fakeScoreData.fullHouse = sum;
+                fakeScoreData.FullHouse = sum;
             }
         }
     }
@@ -163,12 +163,12 @@ public class ScoreCountSystem : MonoBehaviour
         if (cnt >= 4)
         {
             Debug.Log("smallStraight");
-            fakeScoreData.smallStraight = ssFixedScore;
+            fakeScoreData.SmallStraight = ssFixedScore;
 
             if (cnt == 5)
             {
                 Debug.Log("largeStraight");
-                fakeScoreData.largeStraight = lsFixedScore;
+                fakeScoreData.LargeStraight = lsFixedScore;
             }
         }
     }
