@@ -64,6 +64,7 @@ public class DiceManager : MonoBehaviour
         ChangeSelectDice();
     }
 
+    // 주사위 돌릴 준비 마쳤을 때 실행
     public void EndSelectDice()
     {
         if (_selectController != null)
@@ -77,12 +78,19 @@ public class DiceManager : MonoBehaviour
 
     public void ChangeSelectDice(float axis = 0)
     {
-        StartCoroutine(SetSelectDice(selectedIndex + (int)axis));
+        StartCoroutine(Col_ChangeSelectDice(selectedIndex + (int)axis));
     }
 
-    private IEnumerator SetSelectDice(int currentIndex)
+    private IEnumerator Col_ChangeSelectDice(int currentIndex)
     {
-        if (currentIndex < 0 || currentIndex >= _diceController.Length) yield break;
+        if (currentIndex < 0 || currentIndex >= _diceController.Length)
+        {
+            if (currentIndex < 0)
+            {
+                Debug.Log("점수 선택 시작");
+                yield break;
+            }
+        }
 
         isChanging = true;
 

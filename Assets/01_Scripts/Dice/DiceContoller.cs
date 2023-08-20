@@ -95,7 +95,7 @@ public class DiceContoller : MonoBehaviour
         isNeedCheck = false;
         isGround = true;
 
-        // rotation 부분 -> 추후 수정 필요
+        // rotation 부분
         Vector3 nowAngle = new Vector3(transform.localEulerAngles.x, 0, transform.localEulerAngles.z);
         transform.localEulerAngles = nowAngle;
 
