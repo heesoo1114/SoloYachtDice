@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class ScoreText : MonoBehaviour
 {
@@ -11,7 +12,23 @@ public class ScoreText : MonoBehaviour
     }
     private TextAnimation _textAnimation;
 
-    public int scoreKindId;
+    private bool isCanPut = true;
+    public bool IsCanPut
+    {
+        get => isCanPut;
+        set
+        {
+            Debug.Log(value);
+            isCanPut = value;
+        }
+    }
+
+    private int score = 0;
+    public int Score
+    {
+        get => score;
+        set => score = value;
+    }
 
     private void Awake()
     {
@@ -19,9 +36,18 @@ public class ScoreText : MonoBehaviour
         _textAnimation = GetComponent<TextAnimation>();
     }
 
-    public void SetScoreText()
+    private void Start()
     {
+        isCanPut = true;
+    }
 
+    public void SetScoreText(int num)
+    {
+        isCanPut = false;
+        score = num;
+
+        _text.color = Color.black;
+        _text.text = score.ToString();
     }
 
     public void StartScaleAnim(float targetScale, float speed)

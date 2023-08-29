@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using System;
 
 public class ScoreBoardController : MonoBehaviour
 {
@@ -44,7 +43,7 @@ public class ScoreBoardController : MonoBehaviour
 
             if (inputH > 0)
             {
-                // 스코어 보드 들어가고 다시 주사위 선택 나오는 함수 생성
+                // TODO: 스코어 보드 들어가고 다시 주사위 선택 나오는 함수 생성
 
                 EndSelectScorekind();
                 Debug.Log("다시 주사위 선택으로");
@@ -61,7 +60,6 @@ public class ScoreBoardController : MonoBehaviour
                 {
                     SetRealScore();
                     EndSelectScorekind();
-                    Debug.Log("점수 넣어주기");
                 }
             }
         }
@@ -90,10 +88,16 @@ public class ScoreBoardController : MonoBehaviour
     }
 
     public void SetRealScore()
-    {
+    { 
+        // _selectScoreKind.IsCanPut 이거 값 항상 false임
+
+        if (!_selectScoreKind.IsCanPut) return;
+
         string name = _selectScoreKind.gameObject.name;
-        int temp = fakeScoreData.GetIWantProperty(name);
-        realScoreData.SetIWantProperty(name, temp);
+        int num = fakeScoreData.GetIWantProperty(name);
+        realScoreData.SetIWantProperty(name, num);
+
+        _selectScoreKind.SetScoreText(num);
     }
 
     // 주사위 돌릴 준비 마쳤을 때 실행
