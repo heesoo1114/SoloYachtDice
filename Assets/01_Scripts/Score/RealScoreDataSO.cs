@@ -23,7 +23,9 @@ public class RealScoreDataSO : ScriptableObject
     public int SmallStraight = 0; // (주사위 눈이 연속된 횟수가 4회일 때) 고정 15점
     public int LargeStraight = 0; // (주사위 눈이 연속된 횟수가 5회일 때) 고정 30점
 
-    private int AllTotal = 0;
+    public int GetSubTotal() => Aces + Deuces + Threes + Fours + Fives + Sixes;
+
+    public int GetAllTotal() => Subtotal + Choice + FourOfKind + FullHouse + Yacht + SmallStraight + LargeStraight;
 
     public int GetIWantProperty(string name)
     {
@@ -37,19 +39,7 @@ public class RealScoreDataSO : ScriptableObject
         temp.SetValue(this, value);
     }
 
-    public int GetSubTotal()
-    {
-        Subtotal = Aces + Deuces + Threes + Fours + Fives + Sixes;
-        return Subtotal;
-    }
-
-    public int GetAllTotal()
-    {
-        AllTotal = Subtotal + Choice + FourOfKind + FullHouse + Yacht + SmallStraight + LargeStraight; ;
-        return AllTotal;
-    }
-
-    public void ResetProperty()
+    public void ResetValue()
     {
         Aces = 0;
         Deuces = 0;
@@ -68,5 +58,4 @@ public class RealScoreDataSO : ScriptableObject
         SmallStraight = 0; 
         LargeStraight = 0; 
     }
-   
 }

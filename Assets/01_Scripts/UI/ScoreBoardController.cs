@@ -23,14 +23,20 @@ public class ScoreBoardController : MonoBehaviour
     [SerializeField] private float scaleAnimSpeed = 1f;
     private float startFontSize;
 
+    private PanelMoveAnimation _panelMoveAnim;
+
     private void Awake()
     {
         fakeScoreData = Resources.Load<FakeScoreDataSO>("FakeScoreData");
         realScoreData = Resources.Load<RealScoreDataSO>("RealScoreData");
+        _panelMoveAnim = GetComponent<PanelMoveAnimation>();
     }
 
     private void Start()
     {
+        // DiceManager.Instacne.rollDoneEvent += StartSelectScoreKind;
+        DiceManager.Instacne.outOfDiceList += StartSelectScoreKind;
+
         startFontSize = scoreKindList[0].TextMeshPro.fontSize;
     }
 
@@ -43,10 +49,12 @@ public class ScoreBoardController : MonoBehaviour
 
             if (inputH > 0)
             {
-                // TODO: 스코어 보드 들어가고 다시 주사위 선택 나오는 함수 생성
+                // 점수 선택 -> 주사위 선택
+
+                Debug.Log("다시 주사위 선택으로");
 
                 EndSelectScorekind();
-                Debug.Log("다시 주사위 선택으로");
+                DiceManager.Instacne.StartSelectDice();
             }
 
             if (inputV != 0)
@@ -67,7 +75,6 @@ public class ScoreBoardController : MonoBehaviour
 
     #region Select
 
-    [ContextMenu("On")]
     public void StartSelectScoreKind()
     {
         isScoreBoardOn = true;
@@ -131,6 +138,20 @@ public class ScoreBoardController : MonoBehaviour
 
         yield return new WaitForSeconds(scaleAnimSpeed);
         isChanging = false;
+    }
+
+    #endregion
+
+    #region Anim
+
+    private void ShowOffPanel()
+    {
+        _panelMoveAnim.PlayMoveAnim();
+    }
+
+    private void ShowPanel()
+    {
+        _panelMoveAnim.ResetMoveAnim();
     }
 
     #endregion

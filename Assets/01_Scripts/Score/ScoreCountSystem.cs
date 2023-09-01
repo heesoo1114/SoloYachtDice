@@ -29,7 +29,7 @@ public class ScoreCountSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            fakeScoreData.ResetProperty();
+            fakeScoreData.ResetValue();
         }
     }
 
@@ -74,6 +74,8 @@ public class ScoreCountSystem : MonoBehaviour
         Array.Clear(numList, 0, numList.Length);
         Array.Clear(numCntList, 0, numCntList.Length);
 
+        // fakeScoreData.ResetValue();
+
         yield return new WaitForEndOfFrame();
     }
 
@@ -91,12 +93,6 @@ public class ScoreCountSystem : MonoBehaviour
 
     private void PersonalScoreTypeCount()
     {
-        // for (int i = 0; i < numCntList.Length; i++)
-        // {
-        //     num = numCntList[i];
-        //     fakeScoreData.cntScoreList[i] = num * (i + 1);
-        // }
-
         fakeScoreData.Aces   = numCntList[0] * 1;
         fakeScoreData.Deuces = numCntList[1] * 2;
         fakeScoreData.Threes = numCntList[2] * 3;
@@ -124,8 +120,8 @@ public class ScoreCountSystem : MonoBehaviour
 
         if (max >= 4)
         {
-            fakeScoreData.FourOfKind = sum;
             Debug.Log("fourofkind");
+            fakeScoreData.FourOfKind = sum;
 
             if (max == 5)
             {
@@ -150,12 +146,15 @@ public class ScoreCountSystem : MonoBehaviour
         {
             if (i == numCntList.Length - 1)
             {
-                if (numCntList[i] != 0) cnt++;
+                if (numCntList[i] != 0) 
+                    cnt++;
                 break;
             }
 
-            if (numCntList[i] == 0) cnt = 0;
-            else cnt++;
+            if (numCntList[i] == 0) 
+                cnt = 0;
+            else 
+                cnt++;
         }
 
         // Debug.Log("cnt : " + cnt);

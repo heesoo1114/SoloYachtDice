@@ -4,8 +4,6 @@ using UnityEngine;
 public class FakeScoreDataSO : ScriptableObject
 {
     [Header("Personal")]
-    // public int[] cntScoreList = new int[6];
-
     public int Aces = 0;
     public int Deuces = 0;
     public int Threes = 0;
@@ -31,10 +29,8 @@ public class FakeScoreDataSO : ScriptableObject
         return (int)temp;
     }
 
-    public void ResetProperty()
+    public void ResetValue()
     {
-        // Array.Clear(cntScoreList, 0, cntScoreList.Length);
-
         Aces = 0;
         Deuces = 0;
         Threes = 0;
@@ -42,7 +38,7 @@ public class FakeScoreDataSO : ScriptableObject
         Fives = 0;
         Sixes = 0;
 
-        Subtotal = 0; // 여기 추후 수정
+        // Subtotal = 0; // 여기 추후 수정
         Choice = 0;
 
         FourOfKind = 0;

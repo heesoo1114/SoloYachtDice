@@ -4,6 +4,8 @@ using System;
 
 public class DiceManager : MonoBehaviour
 {
+    public static DiceManager Instacne = null;
+
     private DiceContoller[] _diceController = new DiceContoller[5];
     private DiceContoller _selectController = null;
 
@@ -19,9 +21,12 @@ public class DiceManager : MonoBehaviour
     private int initIndex = 0;
 
     public Action rollDoneEvent;
+    public Action outOfDiceList;
 
     private void Awake()
     {
+        if (Instacne == null) Instacne = this;
+
         for (int i = 0; i < transform.childCount; i++)
         {
             _diceController[i] = transform.GetChild(i).GetComponent<DiceContoller>();
@@ -78,6 +83,7 @@ public class DiceManager : MonoBehaviour
 
     public void ChangeSelectDice(float axis = 0)
     {
+        Debug.Log(selectedIndex + (int)axis);
         StartCoroutine(Col_ChangeSelectDice(selectedIndex + (int)axis));
     }
 
@@ -85,11 +91,9 @@ public class DiceManager : MonoBehaviour
     {
         if (currentIndex < 0 || currentIndex >= _diceController.Length)
         {
-            if (currentIndex < 0)
-            {
-                Debug.Log("점수 선택 시작");
-                yield break;
-            }
+            Debug.Log("점수 선택 시작");
+            outOfDiceList?.Invoke();
+            yield break;
         }
 
         isChanging = true;
