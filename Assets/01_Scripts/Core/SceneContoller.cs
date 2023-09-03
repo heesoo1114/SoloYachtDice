@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class SceneContoller : MonoBehaviour
 {
-    public void LoadScene(string sceneName)
+    public void LoadSceneFunc(string sceneName)
     {
+        Debug.Log(sceneName);   
         SceneManager.LoadScene(sceneName);
     }
 }

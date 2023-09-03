@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _sceneController.LoadScene("Intro");
+                _sceneController.LoadSceneFunc("Intro");
             }
         }
     }
