@@ -83,6 +83,7 @@ public class ScoreBoardController : MonoBehaviour
             scoreKind.TextMeshPro.text = "00";
         }
 
+        GameManager.Instance.score = realScoreData.GetAllTotal();
         Debug.Log(realScoreData.GetAllTotal());
 
         fakeScoreData.ResetValue();
