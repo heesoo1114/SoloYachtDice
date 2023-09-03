@@ -13,6 +13,14 @@ public class DiceManager : MonoBehaviour
     public int[] DiceInfo => diceInfo;
 
     private bool isRollDone;
+
+    private int rollCnt = 0;
+    private bool isCanRoll = true;
+    public bool IsCanRoll
+    {
+        get { return isCanRoll; }
+        set { isCanRoll = value; }
+    }
      
     // Select
     private bool isSelecting;
@@ -20,6 +28,7 @@ public class DiceManager : MonoBehaviour
     private int selectedIndex = 0;
     private int initIndex = 0;
 
+    public Action roolStartEvent;
     public Action rollDoneEvent;
     public Action outOfDiceList;
 
@@ -31,6 +40,12 @@ public class DiceManager : MonoBehaviour
         {
             _diceController[i] = transform.GetChild(i).GetComponent<DiceContoller>();
         }
+    }
+
+    private void Start()
+    {
+        isRollDone = true;
+        isCanRoll = true;
     }
 
     private void Update()
@@ -83,7 +98,7 @@ public class DiceManager : MonoBehaviour
 
     public void ChangeSelectDice(float axis = 0)
     {
-        Debug.Log(selectedIndex + (int)axis);
+        // Debug.Log(selectedIndex + (int)axis);
         StartCoroutine(Col_ChangeSelectDice(selectedIndex + (int)axis));
     }
 
@@ -91,7 +106,8 @@ public class DiceManager : MonoBehaviour
     {
         if (currentIndex < 0 || currentIndex >= _diceController.Length)
         {
-            Debug.Log("점수 선택 시작");
+            // Debug.Log("점수 선택 시작");
+            EndSelectDice();
             outOfDiceList?.Invoke();
             yield break;
         }
@@ -157,8 +173,12 @@ public class DiceManager : MonoBehaviour
 
     public void AllDiceRoll()
     {
+        if (!isCanRoll) return;
+
         if (!AllDiceReady()) return;
         if (AllDiceKeep()) return;
+
+        roolStartEvent?.Invoke();
 
         EndSelectDice();
 
@@ -204,6 +224,13 @@ public class DiceManager : MonoBehaviour
     {
         isRollDone = true;
 
+        rollCnt++;
+        if (rollCnt == 3)
+        {
+            isCanRoll = false;
+            rollCnt = 0;
+        }
+
         StartSelectDice();
         SetDiceNumInfo();
 
@@ -219,6 +246,14 @@ public class DiceManager : MonoBehaviour
         foreach (DiceContoller _controller in _diceController)
         {
             _controller.ResetCube();
+        }
+    }
+
+    public void AllDiceInit()
+    {
+        foreach (DiceContoller _controller in _diceController)
+        {
+            _controller.InitCube();
         }
     }
 

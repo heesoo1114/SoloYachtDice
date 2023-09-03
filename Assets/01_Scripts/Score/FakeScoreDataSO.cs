@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "SO/FakeScoreData", fileName = "FakeScoreData")]

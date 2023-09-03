@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine.Events;
 using UnityEngine;
 using System;
 
@@ -20,17 +21,11 @@ public class ScoreCountSystem : MonoBehaviour
 
     private bool isCounted = false; // 점수 세는 중인지 아닌지
 
+    public UnityEvent countDoneEvent;
+
     private void Start()
     {
         _diceManager.rollDoneEvent += SetAndCount;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            fakeScoreData.ResetValue();
-        }
     }
 
     #region Flow
@@ -47,6 +42,8 @@ public class ScoreCountSystem : MonoBehaviour
         yield return ScoreAllTypeCount();
         yield return ResetScoreInfO();
         isCounted = false;
+
+        countDoneEvent?.Invoke();
     }
 
     // 현재 주사위 숫자 정보 세팅
@@ -65,7 +62,7 @@ public class ScoreCountSystem : MonoBehaviour
             sum += n;
         }
 
-        yield return new WaitForEndOfFrame();
+        yield return null;
     }
 
     private IEnumerator ResetScoreInfO()

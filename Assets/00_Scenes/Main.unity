@@ -1149,8 +1149,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287401100
-  m_fontColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3670,6 +3670,7 @@ MonoBehaviour:
   - {fileID: 1033604577}
   - {fileID: 1253838085}
   - {fileID: 415094900}
+  subtotalText: {fileID: 302032834}
   EndFontSize: 45
   scaleAnimSpeed: 0.3
 --- !u!114 &1047002472
@@ -5621,7 +5622,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player Name
+  m_text: Player
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8d610b6e1c073f64d8ec3f68c7b601b1, type: 2}
   m_sharedMaterial: {fileID: 9140794047545421181, guid: 8d610b6e1c073f64d8ec3f68c7b601b1, type: 2}
@@ -5989,6 +5990,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _diceManager: {fileID: 919120744}
   fakeScoreData: {fileID: 11400000, guid: 4ce294aa2c85508448b2e7fe537dc830, type: 2}
+  countDoneEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1047002471}
+        m_TargetAssemblyTypeName: ScoreBoardController, Assembly-CSharp
+        m_MethodName: ShowYouCanPutScore
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1754267071 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6138043921473953259, guid: 0d2b9188252a78b4298fb8e34d9229ee, type: 3}

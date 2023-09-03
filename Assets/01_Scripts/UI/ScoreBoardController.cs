@@ -8,8 +8,10 @@ public class ScoreBoardController : MonoBehaviour
     private RealScoreDataSO realScoreData;
 
     [SerializeField] private List<ScoreText> scoreKindList;
+    [SerializeField] private ScoreText subtotalText;
 
     private bool isScoreBoardOn = false;
+    private bool isNeedRoll = false;
 
     private ScoreText _selectScoreKind;
 
@@ -34,8 +36,10 @@ public class ScoreBoardController : MonoBehaviour
 
     private void Start()
     {
-        // DiceManager.Instacne.rollDoneEvent += StartSelectScoreKind;
         DiceManager.Instacne.outOfDiceList += StartSelectScoreKind;
+        DiceManager.Instacne.roolStartEvent += () => isNeedRoll = false;
+
+        GameManager.Instance.GameDoneEvent += InitScoreBoard;
 
         startFontSize = scoreKindList[0].TextMeshPro.fontSize;
     }
@@ -49,12 +53,8 @@ public class ScoreBoardController : MonoBehaviour
 
             if (inputH > 0)
             {
-                // 점수 선택 -> 주사위 선택
-
                 Debug.Log("다시 주사위 선택으로");
-
                 EndSelectScorekind();
-                DiceManager.Instacne.StartSelectDice();
             }
 
             if (inputV != 0)
@@ -67,44 +67,84 @@ public class ScoreBoardController : MonoBehaviour
                 if (_selectScoreKind != null)
                 {
                     SetRealScore();
-                    EndSelectScorekind();
                 }
             }
         }
+    }
+
+    // GameDoneEvent
+    private void InitScoreBoard()
+    {
+        isScoreBoardOn = false;
+        isNeedRoll = false;
+
+        foreach (var scoreKind in scoreKindList)
+        {
+            scoreKind.TextMeshPro.text = "00";
+        }
+
+        Debug.Log(realScoreData.GetAllTotal());
+
+        fakeScoreData.ResetValue();
+        realScoreData.ResetValue();
     }
 
     #region Select
 
     public void StartSelectScoreKind()
     {
-        isScoreBoardOn = true;
-        
-        // 여기서 넣을 수 있는 점수들 넣어서 텍스트로 보여주기
-        foreach (var scoreKind in scoreKindList)
+        if (isNeedRoll)
         {
-            string name = scoreKind.gameObject.name;
-            int temp = fakeScoreData.GetIWantProperty(name);
-
-            scoreKind.TextMeshPro.text = temp.ToString();
-            
-            // Debug.Log($"{name} + {temp}");
+            DiceManager.Instacne.StartSelectDice();
+            return;
         }
+
+        isScoreBoardOn = true;
+
+        ShowYouCanPutScore();
 
         _selectScoreKind = scoreKindList[initIndex];
         ChangeScoreKind();
     }
 
-    public void SetRealScore()
-    { 
-        // _selectScoreKind.IsCanPut 이거 값 항상 false임
+    public void ShowYouCanPutScore()
+    {
+        // 여기서 넣을 수 있는 점수들 넣어서 텍스트로 보여주기
+        foreach (var scoreKind in scoreKindList)
+        {
+            if (scoreKind.IsCanPut)
+            {
+                string name = scoreKind.gameObject.name;
+                int temp = fakeScoreData.GetIWantProperty(name);
 
+                scoreKind.TextMeshPro.text = temp.ToString();
+
+                // Debug.Log($"{name} + {temp}");
+            }
+        }
+
+        subtotalText.TextMeshPro.text = realScoreData.GetSubTotal().ToString();
+    }
+
+    // 한턴 기준이 되는 시점
+    public void SetRealScore()
+    {
+        // _selectScoreKind.IsCanPut 이거 값 항상 false임
         if (!_selectScoreKind.IsCanPut) return;
+
+        isNeedRoll = true;
+        
+        GameManager.Instance.TurnCnt++;
+        DiceManager.Instacne.AllDiceInit();
+        DiceManager.Instacne.IsCanRoll = true;  
 
         string name = _selectScoreKind.gameObject.name;
         int num = fakeScoreData.GetIWantProperty(name);
         realScoreData.SetIWantProperty(name, num);
 
         _selectScoreKind.SetScoreText(num);
+
+        EndSelectScorekind();
     }
 
     // 주사위 돌릴 준비 마쳤을 때 실행
@@ -117,11 +157,13 @@ public class ScoreBoardController : MonoBehaviour
             selectedIndex = initIndex;
         }
         isScoreBoardOn = false;
+        DiceManager.Instacne.StartSelectDice();
     }
 
     private void ChangeScoreKind(float axis = 0)
     {
-        StartCoroutine(Col_ChangeScoreKind(selectedIndex + (int)axis));
+        int index = selectedIndex + (int)axis;
+        StartCoroutine(Col_ChangeScoreKind(index));
     }
 
     private IEnumerator Col_ChangeScoreKind(int currentIndex)

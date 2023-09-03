@@ -10,6 +10,7 @@ public class DiceContoller : MonoBehaviour
 
     private Vector3 initPos;
     private float initScale;
+    private Quaternion initRot;
 
     private int diceNum = 0;
     public int DiceNum => diceNum;
@@ -39,6 +40,7 @@ public class DiceContoller : MonoBehaviour
     {
         initPos = transform.localPosition;
         initScale = transform.localScale.x;
+        initRot = transform.localRotation;
     }
 
     private void Update()
@@ -48,7 +50,7 @@ public class DiceContoller : MonoBehaviour
             _triggerController.ActTrigger();
             isNeedCheck = false;
         }
-    }
+    } 
 
     #region 접근
 
@@ -75,6 +77,22 @@ public class DiceContoller : MonoBehaviour
     #endregion
 
     #region Controll 함수
+
+    public void InitCube()
+    {
+        transform.localRotation = initRot;
+
+        isNeedCheck = false;
+        isGround = true;
+
+        if (isKeep)
+        {
+            isKeep = false;
+            _outLine.enabled= isKeep;
+            _rigidBody.isKinematic = isKeep;
+        }
+
+    }
 
     public void RollCube()
     {
